@@ -1,0 +1,51 @@
+services:
+  fedagora_db:
+    container_name: fedagora_db
+    image: postgres:17-alpine
+    ports:
+      - "${DATABASE_PORT}:5432"
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=mFmYz9rtvku!
+      - POSTGRES_DB=fedagora_db
+    volumes:
+      - db_volume:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - fedagora_net
+  
+  fedagora_backend:
+    container_name: fedagora_backend
+    working_dir: /app/backend/
+    build: ./backend/
+    networks:
+      - fedagora_net
+    ports:
+      - "${API_PORT}:${API_PORT}"
+    volumes:
+      - backend_node_modules_volume:/app/backend/node_modules/
+      - ./backend/:/app/backend/
+    env_file:
+      - .env
+    command: npm run start
+  
+  fedagora_frontend:
+    build: ./frontend/
+    working_dir: /app/frontend/
+    container_name: fedagora_frontend
+    networks:
+      - fedagora_net
+    ports:
+      - "${FRONTEND_PORT}:5173"
+    volumes:
+      - frontend_node_modules_volume:/app/frontend/node_modules
+      - ./frontend:/app/frontend/
+    command: npm run dev
+
+volumes:
+  db_volume:
+  backend_node_modules_volume:
+  frontend_node_modules_volume:
+
+networks:
+  fedagora_net:
