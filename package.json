@@ -1,0 +1,14 @@
+{
+  "name": "fedagora server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cd webPage && npm run build && cd ../electron && npm run test",
+    "build": "cd webPage && npm run build && cd ../electron && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module"
+}

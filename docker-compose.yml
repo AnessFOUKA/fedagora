@@ -1,0 +1,19 @@
+services:
+  app:
+    container_name: app
+    working_dir: /app
+    image: node:22-bookworm
+    user: "${UID}:${GID}"
+    volumes:
+      - ./:/app
+    command: >
+      bash -c '
+        folders=(electron webPage)
+        for folder in "$${folders[@]}"; do
+          cd "/app/""$$folder"
+
+          if [[ ! -d "node_modules" ]]; then
+            npm install
+          fi
+        done
+      '
